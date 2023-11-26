@@ -60,3 +60,16 @@ class Category(models.Model):
     name = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Review(models.Model):
+    text = models.TextField(null=True, blank=True)
+    product = models.ForeignKey(
+        to='post.Product',
+        on_delete=models.CASCADE,
+        related_name='reviews',
+        null=True,
+        blank=True,
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

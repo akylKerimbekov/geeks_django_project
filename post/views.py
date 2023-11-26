@@ -78,3 +78,19 @@ def categories_view(request):
             'products/categories.html',
             context=context
         )
+
+
+def product_detail_view(request, product_id):
+    if request.method == 'GET':
+        try:
+            product = Product.objects.get(id=product_id)
+        except Product.DoesNotExist:
+            return render(request, 'errors/404.html')
+
+        context = {
+            "product": product
+        }
+
+        return render(request,
+                      'products/product_detail.html',
+                      context)
