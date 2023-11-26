@@ -22,5 +22,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main_view),
     path('posts/', views.posts_view),
+    path('posts/<int:post_id>/', views.post_detail_view),
+    path('hashtags/', views.hashtags_view),
     path('products/', views.products_view),
+    path('categories/', views.categories_view),
 ]
