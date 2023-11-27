@@ -1,5 +1,5 @@
 from django.shortcuts import render
-
+from django.test import override_settings
 from post.models import Post, Product, HashTag, Category
 
 
@@ -12,7 +12,8 @@ def main_view(request):
 
 def posts_view(request):
     if request.method == 'GET':
-        posts = Post.objects.all()  # QuerySet
+        #posts = Post.objects.all()  # QuerySet
+        posts = Post.objects.prefetch_related('hashtags').all()
         # SELECT * FROM post_post;
 
         context = {
@@ -64,7 +65,7 @@ def products_view(request):
 
         return render(request, 'products/products.html', context=context)
 
-
+@override_settings(DEBUG=True)
 def categories_view(request):
     if request.method == 'GET':
         categories = Category.objects.all()
