@@ -1,5 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.test import override_settings
+
+from post.forms import PostCreateForm, PostCreateForm2, ProductCreateForm, ProductCreateForm2
 from post.models import Post, Product, HashTag, Category
 
 
@@ -12,7 +14,7 @@ def main_view(request):
 
 def posts_view(request):
     if request.method == 'GET':
-        #posts = Post.objects.all()  # QuerySet
+        # posts = Post.objects.all()  # QuerySet
         posts = Post.objects.prefetch_related('hashtags').all()
         # SELECT * FROM post_post;
 
@@ -37,6 +39,25 @@ def post_detail_view(request, post_id):
         return render(request,
                       'posts/post_detail.html',
                       context)
+
+
+def post_create(request):
+    if request.method == 'GET':
+        context = {
+            "form": PostCreateForm
+        }
+        return render(request, 'posts/create.html', context)
+    if request.method == 'POST':
+        form = PostCreateForm2(request.POST, request.FILES)
+        if form.is_valid():
+            Post.objects.create(**form.cleaned_data)
+            return redirect("/posts/")
+
+        context = {
+            "form": form
+        }
+
+        return render(request, 'posts/create.html', context)
 
 
 def hashtags_view(request):
@@ -64,6 +85,7 @@ def products_view(request):
         }
 
         return render(request, 'products/products.html', context=context)
+
 
 @override_settings(DEBUG=True)
 def categories_view(request):
@@ -95,3 +117,22 @@ def product_detail_view(request, product_id):
         return render(request,
                       'products/product_detail.html',
                       context)
+
+
+def product_create(request):
+    if request.method == 'GET':
+        context = {
+            "form": ProductCreateForm
+        }
+        return render(request, 'products/create.html', context)
+    if request.method == 'POST':
+        form = ProductCreateForm2(request.POST, request.FILES)
+        if form.is_valid():
+            Product.objects.create(**form.cleaned_data)
+            return redirect("/products/")
+
+        context = {
+            "form": form
+        }
+
+        return render(request, 'products/create.html', context)
